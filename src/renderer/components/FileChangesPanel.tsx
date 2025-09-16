@@ -124,11 +124,30 @@ export const FileChangesPanel: React.FC<FileChangesPanelProps> = ({
               onClick={async () => {
                 setIsCreatingPR(true);
                 try {
+                  // 1) Commit and push changes (create feature branch if on default)
+                  const commitRes = await window.electronAPI.gitCommitAndPush({
+                    workspacePath: workspaceId,
+                    commitMessage: 'chore: apply workspace changes',
+                    createBranchIfOnDefault: true,
+                    branchPrefix: 'orch'
+                  })
+
+                  if (!commitRes?.success) {
+                    toast({
+                      title: "Commit/Push Failed",
+                      description: commitRes?.error || "Unable to push changes.",
+                      variant: "destructive",
+                    });
+                    return;
+                  }
+
+                  // 2) Create PR via GitHub CLI
                   const res = await window.electronAPI.createPullRequest({
                     workspacePath: workspaceId,
                     fill: true,
                   });
                   if (res?.success) {
+                    await refreshChanges();
                     toast({
                       title: "Pull Request Created",
                       description: res.url || "PR created successfully.",

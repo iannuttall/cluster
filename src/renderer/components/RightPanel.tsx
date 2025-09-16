@@ -174,6 +174,24 @@ const RightPanel: React.FC<RightPanelProps> = ({ selectedRun }) => {
               if (!selectedRun) return;
               setIsCreatingPR(true);
               try {
+                // 1) Commit and push changes (create feature branch if on default)
+                const commitRes = await window.electronAPI.gitCommitAndPush({
+                  workspacePath: selectedRun.worktreePath,
+                  commitMessage: 'chore: apply workspace changes',
+                  createBranchIfOnDefault: true,
+                  branchPrefix: 'orch'
+                })
+
+                if (!commitRes?.success) {
+                  toast({
+                    title: "Commit/Push Failed",
+                    description: commitRes?.error || "Unable to push changes.",
+                    variant: "destructive",
+                  });
+                  return;
+                }
+
+                // 2) Create PR via GitHub CLI
                 const res = await window.electronAPI.createPullRequest({
                   workspacePath: selectedRun.worktreePath,
                   fill: true,

@@ -317,6 +317,117 @@ ipcMain.handle('git:create-pr', async (_, args: { workspacePath: string; title?:
   }
 })
 
+// Git: Commit all changes and push current branch (create feature branch if on default)
+ipcMain.handle(
+  'git:commit-and-push',
+  async (
+    _,
+    args: {
+      workspacePath: string
+      commitMessage?: string
+      createBranchIfOnDefault?: boolean
+      branchPrefix?: string
+    }
+  ) => {
+    const {
+      workspacePath,
+      commitMessage = 'chore: apply workspace changes',
+      createBranchIfOnDefault = true,
+      branchPrefix = 'orch'
+    } = args || ({} as any)
+
+    try {
+      // Ensure we're in a git repo
+      await execAsync('git rev-parse --is-inside-work-tree', { cwd: workspacePath })
+
+      // Determine current branch
+      const { stdout: currentBranchOut } = await execAsync('git branch --show-current', {
+        cwd: workspacePath,
+      })
+      const currentBranch = (currentBranchOut || '').trim()
+
+      // Determine default branch via gh, fallback to main/master
+      let defaultBranch = 'main'
+      try {
+        const { stdout } = await execAsync('gh repo view --json defaultBranchRef -q .defaultBranchRef.name', {
+          cwd: workspacePath,
+        })
+        const db = (stdout || '').trim()
+        if (db) defaultBranch = db
+      } catch {
+        try {
+          const { stdout } = await execAsync('git remote show origin | sed -n "/HEAD branch/s/.*: //p"', {
+            cwd: workspacePath,
+          })
+          const db = (stdout || '').trim()
+          if (db) defaultBranch = db
+        } catch {
+          // keep default
+        }
+      }
+
+      // Optionally create a feature branch if currently on default
+      let targetBranch = currentBranch
+      if (createBranchIfOnDefault && (!currentBranch || currentBranch === defaultBranch)) {
+        const ts = new Date()
+          .toISOString()
+          .replace(/[-:T]/g, '')
+          .slice(0, 15)
+        targetBranch = `${branchPrefix}/${defaultBranch}-${ts}`
+        // Ensure we have latest default, then create branch from origin/default if available
+        try {
+          await execAsync('git fetch origin --quiet', { cwd: workspacePath })
+        } catch {}
+
+        // Prefer switching from remote default if it exists
+        try {
+          await execAsync(`git switch -c ${targetBranch} origin/${defaultBranch}`, { cwd: workspacePath })
+        } catch {
+          await execAsync(`git switch -c ${targetBranch}`, { cwd: workspacePath })
+        }
+      }
+
+      // Check for changes; if none, skip add/commit but still push
+      const { stdout: statusOut } = await execAsync('git status --porcelain', { cwd: workspacePath })
+      const hasChanges = !!(statusOut && statusOut.trim())
+
+      if (hasChanges) {
+        // Stage all and commit
+        await execAsync('git add -A', { cwd: workspacePath })
+        try {
+          await execAsync(`git commit -m ${JSON.stringify(commitMessage)}`, { cwd: workspacePath })
+        } catch (err: any) {
+          const msg = String(err?.stderr || err?.message || '')
+          if (!/nothing to commit/i.test(msg)) {
+            throw err
+          }
+        }
+      }
+
+      // Ensure remote origin exists
+      try {
+        await execAsync('git remote get-url origin', { cwd: workspacePath })
+      } catch {
+        return { success: false, error: "No 'origin' remote configured" }
+      }
+
+      // Push branch and set upstream
+      const branchNameOut = targetBranch || currentBranch
+      const pushCmd = `git push -u origin ${branchNameOut}`
+      try {
+        const { stdout, stderr } = await execAsync(pushCmd, { cwd: workspacePath })
+        const out = (stdout || '').trim() || (stderr || '').trim()
+        return { success: true, branch: branchNameOut, output: out }
+      } catch (error: any) {
+        return { success: false, error: error?.stderr || error?.message || String(error) }
+      }
+    } catch (error: any) {
+      console.error('Failed to commit and push:', error)
+      return { success: false, error: error?.message || String(error) }
+    }
+  }
+)
+
 // Database IPC handlers
 ipcMain.handle('db:getProjects', async () => {
   try {
