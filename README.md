@@ -138,3 +138,25 @@ If you want to reset or reclaim space, you can delete the app's database file. T
 - Linux: `~/.config/emdash/emdash.db`
 
 After deletion, restart emdash — the database will be re‑initialized on launch.
+
+## Just for Fun
+
+### A Lettuce Poem
+
+Crisp as dawn in garden dew,
+Emerald ruffles, sun‑brushed hue—
+Layered whispers, cool and light,
+Lettuce turns a bite to bright.
+
+Roots remember rain’s embrace,
+Leaves that curl with gentle grace;
+Tossed with laughter, dressed with zest,
+Simple greens that taste their best.
+
+### Knock, Knock
+
+Knock, knock.
+Who’s there?
+Lettuce.
+Lettuce who?
+Lettuce in — it’s cold out here!
