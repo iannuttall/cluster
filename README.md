@@ -6,6 +6,19 @@ Run multiple Codex Agents in parallel with isolated Git worktrees.
 
 ![App Screenshot](images/screenshot.png)
 
+## Poem
+
+Ode to Orcbench
+
+> In quiet branches, worktrees bloom,
+> Agents wake in sandboxed rooms;
+> Parallel minds, a measured hum,
+> Commit by commit, the futures come.
+> We fork the path without a mess,
+> Each thought a work‑in‑progress;
+> When tasks converge, the diffs run clear—
+> Orchestrated craft, released from fear.
+
 ## Requirements
 
 ### GitHub CLI
