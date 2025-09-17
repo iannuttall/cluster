@@ -44,7 +44,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   const [mentionStart, setMentionStart] = useState<number | null>(null);
   const [mentionIndex, setMentionIndex] = useState(0);
 
-  const mentionResults = mentionOpen ? search(mentionQuery, 12) : [];
+  // Memoize results to avoid recomputing on every render while typing
+  const mentionResults = React.useMemo(
+    () => (mentionOpen ? search(mentionQuery, 12) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mentionOpen, mentionQuery]
+  );
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

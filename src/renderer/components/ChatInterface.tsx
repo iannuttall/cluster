@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Folder } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
 import ReactMarkdown from "react-markdown";
+import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import { buildAttachmentsSection } from "../lib/attachments";
 
@@ -365,79 +366,9 @@ export const ChatInterface: React.FC<Props> = ({
             </div>
           ) : (
             <>
-              {messages.map((message) => {
-                const isUserMessage = message.sender === "user";
-                return (
-                  <div
-                    key={message.id}
-                    className={`flex ${
-                      isUserMessage ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-md px-4 py-3 text-sm leading-relaxed font-sans ${
-                        isUserMessage
-                          ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                          : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                      }`}
-                    >
-                      <div className="prose prose-sm max-w-none">
-                        <ReactMarkdown
-                          components={{
-                            code: ({
-                              node,
-                              inline,
-                        className,
-                        children,
-                        ...props
-                      }: any) => {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                          <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md overflow-x-auto">
-                            <code className={className} {...props}>
-                              {children}
-                            </code>
-                          </pre>
-                        ) : (
-                          <code
-                            className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm"
-                            {...props}
-                          >
-                            {children}
-                          </code>
-                        );
-                      },
-                      ul: ({ children }) => (
-                        <ul className="list-disc list-inside space-y-1 my-2">
-                          {children}
-                        </ul>
-                      ),
-                      ol: ({ children }) => (
-                        <ol className="list-decimal list-inside space-y-1 my-2">
-                          {children}
-                        </ol>
-                      ),
-                      li: ({ children }) => (
-                        <li className="ml-2">{children}</li>
-                      ),
-                      p: ({ children }) => (
-                        <p className="mb-2 last:mb-0">{children}</p>
-                      ),
-                      strong: ({ children }) => (
-                        <strong className="font-semibold">{children}</strong>
-                      ),
-                      em: ({ children }) => (
-                        <em className="italic">{children}</em>
-                      ),
-                    }}
-                        >
-                          {message.content}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {messages.map((message) => (
+                <MessageBubble key={message.id} message={message as any} />
+              ))}
               
               {isStreaming && streamingMessage && (
                 <div className="flex justify-start">
