@@ -124,3 +124,41 @@ The application stores conversation history locally, which may consume disk spac
 - Conversations are stored per workspace and persist across sessions
 - Database grows with usage but remains manageable for typical development workflows
 - Consider periodic cleanup of old conversations if storage becomes a concern
+
+### Clearing Local Storage
+
+If you need to free disk space or reset the app’s local state, you can remove the SQLite database. This deletes all saved projects, workspaces, and conversation history. Your Git repositories and worktrees on disk are not affected.
+
+**Before You Start:**
+- Quit orcbench to ensure the database is not in use
+
+**Delete the Database File:**
+
+- **macOS/Linux (bash):**
+```bash
+# macOS
+rm -f "$HOME/Library/Application Support/orcbench/database.sqlite"
+
+# Linux
+rm -f "$HOME/.config/orcbench/database.sqlite"
+```
+
+- **Windows (PowerShell):**
+```powershell
+Remove-Item "$env:APPDATA\orcbench\database.sqlite" -Force -ErrorAction SilentlyContinue
+```
+
+**Afterwards:**
+- Launch orcbench; the database is recreated automatically on first run
+- Re-add projects as needed; prior app state will not be restored
+
+## A Little Poem
+
+> In parallel they think and speak,
+> Agents dance on branches sleek.
+> Worktrees sprout like careful seeds,
+> Harvest changes, test their deeds.
+> Merge the bright ideas that shine,
+> Let the quiet ones take their time.
+> orcbench hums, a gentle guide—
+> Code and craft, side by side.
