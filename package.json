@@ -23,7 +23,6 @@
     "openai"
   ],
   "author": "Your Name",
-  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.45",
