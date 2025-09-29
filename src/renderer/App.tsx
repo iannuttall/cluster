@@ -11,7 +11,7 @@ import FileChangesPanel from "./components/FileChangesPanel";
 import { Toaster } from "./components/ui/toaster";
 import { useToast } from "./hooks/use-toast";
 import { useGithubAuth } from "./hooks/useGithubAuth";
-import emdashLogo from "../assets/images/emdash/emdash_logo.svg";
+import emdashLogo from "../assets/images/cluster/cluster_logo.svg";
 
 interface Project {
   id: string;
@@ -180,10 +180,10 @@ const App: React.FC = () => {
               } else {
                 const updateHint =
                   platform === "darwin"
-                    ? "Tip: Update GitHub CLI with: brew upgrade gh — then restart emdash."
+                    ? "Tip: Update GitHub CLI with: brew upgrade gh — then restart cluster."
                     : platform === "win32"
-                    ? "Tip: Update GitHub CLI with: winget upgrade GitHub.cli — then restart emdash."
-                    : "Tip: Update GitHub CLI via your package manager (e.g., apt/dnf) and restart emdash.";
+                    ? "Tip: Update GitHub CLI with: winget upgrade GitHub.cli — then restart cluster."
+                    : "Tip: Update GitHub CLI via your package manager (e.g., apt/dnf) and restart cluster.";
                 toast({
                   title: "GitHub Connection Failed",
                   description: `Git repository detected but couldn't connect to GitHub: ${githubInfo.error}\n\n${updateHint}`,
@@ -475,7 +475,7 @@ const App: React.FC = () => {
                 <div className="logo-shimmer-container">
                   <img
                     src={emdashLogo}
-                    alt="emdash"
+                    alt="cluster"
                     className="logo-shimmer-image"
                   />
                   <span
@@ -602,7 +602,7 @@ const App: React.FC = () => {
               <div className="flex items-center justify-center mb-4">
                 <img
                   src={emdashLogo}
-                  alt="emdash"
+                  alt="cluster"
                   className="h-16"
                 />
               </div>

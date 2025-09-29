@@ -42,8 +42,8 @@ import { databaseService } from './services/DatabaseService'
 app.whenReady().then(async () => {
   if (process.platform === 'darwin') {
     const iconPath = app.isPackaged
-      ? join(process.resourcesPath, 'emdash.icns')
-      : join(__dirname, '..', '..', 'src', 'assets', 'images', 'emdash', 'emdash.icns')
+      ? join(process.resourcesPath, 'cluster.icns')
+      : join(__dirname, '..', '..', 'src', 'assets', 'images', 'cluster', 'cluster.icns')
 
     let dockIcon: Electron.NativeImage | undefined
 
@@ -62,13 +62,7 @@ app.whenReady().then(async () => {
     if (!dockIcon || dockIcon.isEmpty()) {
       const fallbackIconPath = join(
         __dirname,
-        '..',
-        '..',
-        'src',
-        'assets',
-        'images',
-        'emdash',
-        'emdash_dev.png',
+        '..','..','src','assets','images','cluster','cluster_dev.png'
       )
       if (existsSync(fallbackIconPath)) {
         const fallbackIcon = nativeImage.createFromPath(fallbackIconPath)

@@ -56,7 +56,7 @@ export function registerGitIpc() {
             if (addOut?.trim()) outputs.push(addOut.trim())
             if (addErr?.trim()) outputs.push(addErr.trim())
 
-            const commitMsg = 'stagehand: prepare pull request'
+            const commitMsg = 'cluster: prepare pull request'
             try {
               const { stdout: commitOut, stderr: commitErr } = await execAsync(`git commit -m ${JSON.stringify(commitMsg)}`, { cwd: workspacePath })
               if (commitOut?.trim()) outputs.push(commitOut.trim())

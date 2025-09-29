@@ -36,7 +36,7 @@ const MainContent: React.FC<MainContentProps> = ({
               letterSpacing: '0.1em',
               textShadow: '2px 2px 0px #000'
             }}>
-              emdash
+              cluster
             </h1>
             <h2 className="text-2xl text-gray-400">Codex</h2>
           </div>

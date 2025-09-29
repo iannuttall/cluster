@@ -199,7 +199,7 @@ const WorkspaceModal: React.FC<WorkspaceModalProps> = ({
 
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    emdash runs a <strong>setup script</strong> each time you
+                    cluster runs a <strong>setup script</strong> each time you
                     create a new workspace.
                   </p>
                 </div>

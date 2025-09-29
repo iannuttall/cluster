@@ -58,34 +58,9 @@ export class DatabaseService {
     const userDataPath = app.getPath('userData');
 
     // Preferred/current DB filename
-    const currentName = 'emdash.db';
+    const currentName = 'cluster.db';
     const currentPath = join(userDataPath, currentName);
-
-    // Known legacy filenames we may encounter from earlier builds/docs
-    const legacyNames = ['database.sqlite', 'orcbench.db'];
-
-    // If current DB exists, use it
-    if (existsSync(currentPath)) {
-      this.dbPath = currentPath;
-      return;
-    }
-
-    // Otherwise, migrate the first legacy DB we find to the current name
-    for (const legacyName of legacyNames) {
-      const legacyPath = join(userDataPath, legacyName);
-      if (existsSync(legacyPath)) {
-        try {
-          renameSync(legacyPath, currentPath);
-          this.dbPath = currentPath;
-        } catch {
-          // If rename fails for any reason, fall back to using the legacy file in place
-          this.dbPath = legacyPath;
-        }
-        return;
-      }
-    }
-
-    // No existing DB found; initialize a new one at the current path
+    // Always use cluster.db; no legacy migration
     this.dbPath = currentPath;
   }
 
